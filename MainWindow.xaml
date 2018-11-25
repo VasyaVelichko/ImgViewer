@@ -1,0 +1,243 @@
+﻿<Window x:Class="ImgViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ImgViewer"
+        xmlns:lclz="clr-namespace:ImgViewer.Localization"
+        Title="4 Images" MinHeight="360" MinWidth="585" Closing="Window_Closing"
+        WindowState="Maximized" PreviewMouseWheel="Window_PreviewMouseWheel">
+    <Window.CommandBindings>
+        <!-- Файл -->
+        <CommandBinding Command="Open" Executed="OpenImg" />
+        <CommandBinding Command="Copy" Executed="CopyImg" CanExecute="IsImgLoaded" />
+        <CommandBinding Command="Save" Executed="SaveImg" CanExecute="CanJump" />
+        <CommandBinding Command="Properties" Executed="ShowProperties" CanExecute="IsImgLoaded" />
+        <CommandBinding Command="Close" Executed="Close" />
+
+        <!-- Вперед/назад -->
+        <CommandBinding Command="{x:Static local:MainWindow.NextImage}" Executed="NextI" CanExecute="CanJump" />
+        <CommandBinding Command="{x:Static local:MainWindow.PreviousImage}" Executed="PrevI" CanExecute="CanJump" />
+
+        <!-- Вигляд -->
+        <CommandBinding Command="Refresh" Executed="FullScreen" CanExecute="IsImgLoaded" />
+        <CommandBinding Command="{x:Static local:MainWindow.Zoom_Minus}" Executed="ZoomM" CanExecute="IsImgLoaded" />
+        <CommandBinding Command="{x:Static local:MainWindow.Zoom_Plus}" Executed="ZoomP" CanExecute="IsImgLoaded" />
+        <CommandBinding Command="{x:Static local:MainWindow.Turn_Left}" Executed="TurnL" CanExecute="IsImgLoaded" />
+        <CommandBinding Command="{x:Static local:MainWindow.Turn_Right}" Executed="TurnR" CanExecute="IsImgLoaded" />
+
+        <!-- Скроллинг -->
+        <CommandBinding Command="{x:Static local:MainWindow.Scroll}" Executed="Scrolling" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="{x:Static local:MainWindow.NextImage}" Key="Right" />
+        <KeyBinding Command="{x:Static local:MainWindow.PreviousImage}" Key="Left" />
+        <KeyBinding Command="{x:Static local:MainWindow.Zoom_Minus}" Modifiers="Ctrl" Key="OemMinus" />
+        <KeyBinding Command="{x:Static local:MainWindow.Zoom_Plus}" Modifiers="Ctrl" Key="OemPlus" />
+
+        <KeyBinding Command="{x:Static local:MainWindow.Scroll}" Modifiers="Alt+Ctrl+Shift" Key="Scroll" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border TextBlock.Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Content}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="25" />
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="LightGray" />
+                    <Setter Property="BorderBrush" Value="DimGray" />
+                </Trigger>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="(Button.BorderBrush).(Color)"
+                                            To="DodgerBlue" Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="(Button.BorderBrush).(Color)"
+                                            To="Transparent" Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
+            <RowDefinition Height="22" />
+        </Grid.RowDefinitions>
+
+        <!-- Меню -->
+        <Menu Background="WhiteSmoke">
+            <MenuItem Header="{lclz:Translator 100}">
+                <MenuItem Header="{lclz:Translator 101}" Command="Open" />
+                <MenuItem Header="{lclz:Translator 102}" Command="Copy" />
+                <MenuItem Header="{lclz:Translator 103}" Command="Save" />
+                <Separator />
+                <MenuItem Header="{lclz:Translator 104}" Command="Properties" />
+                <Separator />
+                <MenuItem Header="{lclz:Translator 105}" Command="Close" />
+            </MenuItem>
+            <MenuItem Header="{lclz:Translator 200}">
+                <MenuItem Header="{lclz:Translator 201}" Command="Refresh" />
+                <Separator />
+                <MenuItem Header="{lclz:Translator 210}">
+                    <MenuItem Header="{lclz:Translator 211}"
+                              Command="{x:Static local:MainWindow.Turn_Right}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/TurnR.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{lclz:Translator 212}"
+                              Command="{x:Static local:MainWindow.Turn_Left}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/TurnL.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="{lclz:Translator 220}">
+                    <MenuItem Header="{lclz:Translator 221}" Command="{x:Static local:MainWindow.Zoom_Plus}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Zoom_Plus.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{lclz:Translator 222}" Command="{x:Static local:MainWindow.Zoom_Minus}">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Zoom_Minus.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="{lclz:Translator 0}" Click="Select_Language" />
+        </Menu>
+        <!-- Нижня панель -->
+        <StatusBar Grid.Row="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="75" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="75" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="/Icons/Mouse.png" ToolTip="{lclz:Translator 700}" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="{Binding MouseX, Mode=OneWay}" />
+                    <TextBlock Text="; " />
+                    <TextBlock Text="{Binding MouseY, Mode=OneWay}" />
+                </StackPanel>
+                <Image Grid.Column="2" Source="/Icons/Size.png" 
+                       ToolTip="{lclz:Translator 701}" />
+                <TextBlock Grid.Column="3" Text="{Binding Size, Mode=OneWay}" />
+                <Image Grid.Column="4" Source="Icons/Zoom.png" 
+                       ToolTip="{lclz:Translator 220}" />
+                <TextBlock Grid.Column="5" Text="{Binding PercentZoom, Mode=OneWay}" />
+                <Image Grid.Column="6" Source="Icon.ico" 
+                       ToolTip="{lclz:Translator 702}" />
+                <TextBox Grid.Column="7" Text="{Binding Source, Mode=OneWay}" />
+            </Grid>
+        </StatusBar>
+
+        <!-- Зображення -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" AllowDrop="True"
+                      HorizontalScrollBarVisibility="Auto" Name="Brd" Drop="Img_Drop" 
+                      Background="White" Mouse.MouseMove="Brd_MouseMove">
+            <Viewbox>
+                <Viewbox.LayoutTransform>
+                    <ScaleTransform CenterX="0"  CenterY="0"
+                                ScaleX="{Binding Zoom, Mode=OneWay}" 
+                                ScaleY="{Binding Zoom, Mode=OneWay}" />
+                </Viewbox.LayoutTransform>
+                <Viewbox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{lclz:Translator 102}" Command="Copy" />
+                    </ContextMenu>
+                </Viewbox.ContextMenu>
+                <Image Grid.Row="1" Source="{Binding Bmp, Mode=OneWay}" MouseDown="Img_MouseDown"
+                       MouseMove="Image_MouseMove" Stretch="Uniform" 
+                       MouseLeave="Img_MouseLeave" Name="Img">
+                    <Image.LayoutTransform>
+                        <RotateTransform CenterX="0" CenterY="0"
+                                         Angle="{Binding Angle, Mode=OneWay}" />
+                    </Image.LayoutTransform>
+                </Image>
+            </Viewbox>
+        </ScrollViewer>
+        <!-- Панель інструментів -->
+        <Border Grid.Row="2" Name="ToolBar" BorderThickness="0,1,0,0"
+                MouseEnter="ToolBar_MouseEnter" MouseLeave="ToolBar_MouseLeave"
+                BorderBrush="Gray" Background="White">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Command="{x:Static local:MainWindow.PreviousImage}"
+                        ToolTip="{lclz:Translator 231}">
+                    <Button.Content>
+                        <Image Source="/Icons/Left.png" />
+                    </Button.Content>
+                </Button>
+                <Button Command="{x:Static local:MainWindow.Turn_Left}" Name="b1"
+                        ToolTip="{lclz:Translator 212}">
+                    <Button.Content>
+                        <Image Source="/Icons/TurnL.png" />
+                    </Button.Content>
+                </Button>
+                <Button Command="{x:Static local:MainWindow.Zoom_Minus}" 
+                        ToolTip="{lclz:Translator 222}">
+                    <Button.Content>
+                        <Image Source="/Icons/Zoom_Minus.png" />
+                    </Button.Content>
+                </Button>
+                <Slider Minimum="{Binding MinZoom, Mode=OneTime}"
+                        Maximum="{Binding MaxZoom, Mode=OneTime}" 
+                        Value="{Binding Zoom}" ToolTip="{lclz:Translator 220}"
+                        LargeChange="0.5" SmallChange="0.05" Name="ZoomSld"
+                        Width="250" Height="25" VerticalAlignment="Center" Margin="5,0,5,0"
+                        IsEnabled="{Binding ElementName=b1, Path=IsEnabled, Mode=OneWay}"/>
+                <Button Command="{x:Static local:MainWindow.Zoom_Plus}" 
+                        ToolTip="{lclz:Translator 221}">
+                    <Button.Content>
+                        <Image Source="/Icons/Zoom_Plus.png" />
+                    </Button.Content>
+                </Button>
+                <Button Command="{x:Static local:MainWindow.Turn_Right}"
+                        ToolTip="{lclz:Translator 211}">
+                    <Button.Content>
+                        <Image Source="/Icons/TurnR.png" />
+                    </Button.Content>
+                </Button>
+                <Button Command="{x:Static local:MainWindow.NextImage}"
+                        ToolTip="{lclz:Translator 231}">
+                    <Button.Content>
+                        <Image Source="/Icons/Right.png" />
+                    </Button.Content>
+                </Button>
+                <Button Command="Refresh" ToolTip="{lclz:Translator 201}">
+                    <Button.Content>
+                        <Image Source="/Icons/fullscreen.png" />
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

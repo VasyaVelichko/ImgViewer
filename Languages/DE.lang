@@ -1,0 +1,40 @@
+﻿*** IV language file ***
+* please, do not change this file
+Name = Deutsch
+Icon = /Flags/DE.png
+
+0 = Wählen Sie eine Sprache aus
+100 = Datei
+101 = Offen
+102 = Kopieren
+103 = In Datei speichern
+104 = Eigenschaften
+105 = Schließen
+200 = Ansicht
+201 = Vollbild
+210 = Abbiegen
+211 = 90° nach rechts drehen
+212 = 90° nach links drehen
+220 = Skalierung
+221 = Vergrößern
+222 = Verkleinern
+231 = Vorheriges Bild
+232 = Nächstes Bild
+
+700 = Mauskoordinaten
+701 = Bildmaße (in Pixel)
+702 = Pfad zur Bilddatei
+
+900 = Bildeigenschaften
+901 = Name:\s
+902 = Erweiterung:\s
+903 = Vollständiger Pfad:\s
+904 = Dateigröße:\s
+905 = Größe (in Pixel):\s
+
+1000 = Fehler
+1001 = Image konnte nicht geladen werden: {0}
+1002 = Fehler beim Speichern des Bildes!\nFehler: {0}
+1003 = Das Bild konnte nicht kopiert werden:\nFehler: {0}
+
+1 = Alles auswählen

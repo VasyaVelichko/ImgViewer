@@ -1,0 +1,41 @@
+﻿*** IV language file ***
+* please, do not change this file
+
+Name = Français
+Icon = /Flags/FR.png
+
+0 = Choisissez une langue
+100 = Fichier
+101 = Ouvert
+102 = Copier
+103 = Enregistrer dans le fichier
+104 = Propriétés
+105 = Fermer
+200 = Voir
+201 = Plein écran
+210 = Tourner
+211 = Tourne à 90 ° vers la droite
+212 = Tourne à 90 ° vers la gauche
+220 = Mise à l'échelle
+221 = Zoom avant
+222 = Zoom arrière
+231 = Image précédente
+232 = Image suivante
+
+700 = Coordonnées de la souris
+701 = Dimensions de l'image (en pixels)
+702 = chemin du fichier image
+
+900 = Propriétés de l'image
+901 = Nom:\s
+902 = Extension:\s
+903 = Chemin complet:\s
+904 = Taille du fichier:\s
+905 = Taille (en pixels):\s
+
+1000 = Erreur
+1001 = Echec du chargement de l'image: {0}
+1002 = Impossible d'enregistrer l'image!\nErreur: {0}
+1003 = Impossible de copier l'image:\nErreur: {0}
+
+1 = Tout sélectionner

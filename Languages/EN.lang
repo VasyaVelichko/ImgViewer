@@ -1,0 +1,47 @@
+﻿*** IV language file ***
+* please, do not change this file
+
+*** Language Info ***
+Name = English
+Icon = /Flags/EN.png
+
+*** Menu & tool bar ***
+0 = Select a language
+100 = File
+101 = Open
+102 = Copy
+103 = Save to file
+104 = Properties
+105 = Close
+200 = View
+201 = Full screen
+210 = Turn
+211 = Turn 90° to the right
+212 = Turn 90° to the left
+220 = Scaling
+221 = Zoom in
+222 = Zoom out
+231 = Previous image
+232 = Next image
+
+*** Status bar ***
+700 = Mouse Coordinates
+701 = Image dimensions (in pixels)
+702 = Path to image file
+
+*** Property window ***
+900 = Image Properties
+901 = Name:\s
+902 = Extension:\s
+903 = Full path:\s
+904 = File size:\s
+905 = Size (in pixels):\s
+
+*** Errors ***
+1000 = Error
+1001 = Failed to load image: {0}
+1002 = Failed to save image!\nError: {0}
+1003 = Could not copy the image:\nError: {0}
+
+*** Commands ***
+1 = Select all
